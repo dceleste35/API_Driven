@@ -14,6 +14,16 @@ L’ensemble est exécuté :
 
 🎯 Objectif : comprendre comment des services **serverless** peuvent piloter dynamiquement des ressources d’infrastructure par API.
 
+## 🚀 Quick start (résumé)
+
+1. Fork du dépôt et ouverture d’un Codespace
+2. Installation de LocalStack puis `localstack start -d`
+3. Récupération de l’URL du port `4566` et export de `AWS_ENDPOINT`
+4. Installation d’AWS CLI v2
+5. Création d’une instance EC2 de test
+6. `make deploy`
+7. Appel de `POST /ec2` pour `start` / `stop`
+
 ---
 
 ## 🧠 Notions clés à retenir
@@ -52,10 +62,9 @@ Très facile (~5 minutes)
 
 ### 🛠️ Étapes
 
-1. Fork du repository Github : https://github.com/dceleste35/API_Driven
-1. Aller sur votre repository GitHub (fork du projet API‑Driven)
-2. Clic droit sur le bouton **Code**
-3. Sélectionner **Open with Codespaces**
+1. Fork du dépôt GitHub : https://github.com/dceleste35/API_Driven
+2. Ouvrir votre dépôt forké
+3. Cliquer sur **Code** puis **Open with Codespaces**
 4. Cliquer sur **Create new Codespace**
 
 👉 Le Codespace est maintenant connecté à votre repository.
@@ -74,17 +83,15 @@ Simple (~5 minutes)
 
 ## 🔧 Installation de LocalStack
 
-Dans le terminal du Codespace, exécuter **pas à pas** les commandes suivantes :
+Dans le terminal du Codespace, exécuter les commandes suivantes :
 
 ```bash
-sudo -i mkdir rep_localstack
-sudo -i python3 -m venv ./rep_localstack
-sudo -i pip install --upgrade pip && python3 -m pip install localstack
-export S3_SKIP_SIGNATURE_VALIDATION=0
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install localstack
 localstack start -d
 ```
-
----
 
 ## 🔍 Vérification des services LocalStack
 
@@ -92,9 +99,8 @@ localstack start -d
 localstack status services
 ```
 
-👉 Les services doivent apparaître comme **available**.
-La sortie available indique que les services AWS sont correctement exposés par LocalStack et prêts à être utilisés. Les services ne consomment des ressources que lorsqu’ils sont appelés.
-
+👉 Les services doivent apparaître comme **available**.  
+La sortie `available` indique que les services AWS sont correctement exposés par LocalStack et prêts à être utilisés.
 
 ---
 
@@ -102,15 +108,31 @@ La sortie available indique que les services AWS sont correctement exposés par 
 
 1. Aller dans l’onglet **PORTS** du Codespace
 2. Repérer le port **4566**
-3. Passer sa visibilité en **Public** ( Clique droit -> Visibilité du Port )
-4. Ouvrir l’URL associée
+3. Passer sa visibilité en **Public** (Clic droit -> Visibilité du Port)
+4. Copier l’URL associée (elle peut être en `https`)
 
-👉 Cette URL correspond à votre **AWS_ENDPOINT LocalStack**
+👉 Cette URL correspond à votre **AWS_ENDPOINT** LocalStack.  
+⚠️ Copiez l’URL telle quelle, sans slash final.
 
-⚠️ Il est normal que le navigateur affiche une page vide :  
-il s’agit d’une **API AWS**, pas d’une application web.
+Exemples :
+- Codespaces : `https://<id>-4566.app.github.dev`
 
-📌 **Conservez précieusement cette URL**, elle sera utilisée pour toutes les requêtes AWS.
+---
+
+## 🔐 Variables AWS minimales
+
+```bash
+export AWS_ENDPOINT="https://<URL_DU_PORT_4566>"
+export AWS_DEFAULT_REGION=us-east-1
+export AWS_ACCESS_KEY_ID=test
+export AWS_SECRET_ACCESS_KEY=test
+export AWS_SESSION_TOKEN=test
+```
+
+Vérifier que l’endpoint répond :
+```bash
+curl -s "$AWS_ENDPOINT/_localstack/health" | head
+```
 
 ---
 
@@ -151,6 +173,8 @@ Dans GitHub Codespaces :
 3. Passer sa visibilité en **Public**
 4. Copier l’URL associée
 
+---
+
 ## 🔧 Installation de l’AWS CLI
 
 GitHub Codespaces ne fournit pas AWS CLI par défaut.  
@@ -160,6 +184,7 @@ Avant de continuer, vous devez installer l’outil `aws`.
 
 ```bash
 sudo apt update
+sudo apt install -y unzip
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
@@ -175,9 +200,9 @@ Résultat attendu :
 aws-cli/2.x.x Python/3.x ...
 ```
 
-## 🧩 (Optionnel mais propre) Installer `awslocal`
+---
 
-## 🔧 Installation de awslocal (optionnel)
+## 🧩 (Optionnel) Installer `awslocal`
 
 `awslocal` est un wrapper simplifiant l’utilisation de LocalStack.
 
@@ -188,25 +213,6 @@ pip install awscli-local
 Vérifier :
 ```bash
 awslocal --version
-```
-
-Exporter l’endpoint :
-```bash
-export AWS_ENDPOINT="https://<URL_DU_PORT_4566>"
-```
-
-AWS Crédential par défaut : 
-```bash
-export AWS_DEFAULT_REGION=us-east-1
-export AWS_ACCESS_KEY_ID=test
-export AWS_SECRET_ACCESS_KEY=test
-export AWS_SESSION_TOKEN=test
-```
-
-
-Vérifier que l’endpoint répond :
-```bash
-curl -s "$AWS_ENDPOINT/_localstack/health" | head
 ```
 
 ---
@@ -276,11 +282,19 @@ Le repository fournit une commande de déploiement.
 make deploy
 ```
 
-Aucune erreur bloquante ne doit apparaître.
+Aucune erreur bloquante ne doit apparaître.  
+Le script affiche `REST_API_ID` et `API_URL` en fin d’exécution.
 
 ---
 
 ## 🧩 Étape D — Récupérer l’URL de l’API Gateway
+
+Si vous venez d’exécuter `make deploy`, l’URL est déjà affichée à la fin du script :
+```bash
+echo "$API_URL"
+```
+
+Sinon, reconstruire l’URL manuellement :
 
 Lister les APIs disponibles :
 ```bash
@@ -392,6 +406,16 @@ Vous devez être capable de fournir :
 - [ ] API déployée
 - [ ] Appel HTTP stop fonctionnel
 - [ ] Appel HTTP start fonctionnel
+
+---
+
+## 🧯 Dépannage rapide
+
+- `localstack status services` n’affiche pas `available` : relancer `localstack start -d` et vérifier Docker.
+- `aws` est introuvable : réinstaller AWS CLI v2.
+- Erreur `Unable to locate credentials` : re‑exporter `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`.
+- `API_URL` renvoie 404 : vérifier `REST_API_ID`, le stage `dev`, puis relancer `make deploy`.
+- La Lambda répond `Missing instanceId` ou `Invalid action` : vérifier le JSON du body.
 
 ---
 
