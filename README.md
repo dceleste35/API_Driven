@@ -1,9 +1,9 @@
-# 🧩 API‑Driven Infrastructure  
+# API‑Driven Infrastructure  
 **Orchestration de services AWS via API Gateway et Lambda (LocalStack + GitHub Codespaces)**
 
 ---
 
-## ⚡ L’idée en 30 secondes
+##  L’idée en 30 secondes
 
 Cet atelier propose de concevoir une **architecture API‑driven** dans laquelle une **requête HTTP** déclenche, via **API Gateway** et une **fonction Lambda**, des **actions d’infrastructure sur des instances EC2**.
 
@@ -12,9 +12,9 @@ L’ensemble est exécuté :
 - **sans console graphique**
 - directement depuis **GitHub Codespaces**
 
-🎯 Objectif : comprendre comment des services **serverless** peuvent piloter dynamiquement des ressources d’infrastructure par API.
+Objectif : comprendre comment des services **serverless** peuvent piloter dynamiquement des ressources d’infrastructure par API.
 
-## 🚀 Quick start (résumé)
+## Quick start (résumé)
 
 1. Fork du dépôt et ouverture d’un Codespace
 2. Installation de LocalStack puis `localstack start -d`
@@ -26,7 +26,7 @@ L’ensemble est exécuté :
 
 ---
 
-## 🧠 Notions clés à retenir
+## Notions clés à retenir
 
 - **API Gateway** : point d’entrée HTTP
 - **Lambda** : logique exécutée à la demande
@@ -35,7 +35,7 @@ L’ensemble est exécuté :
 
 ---
 
-## 🏗️ Architecture cible
+## Architecture cible
 
 ```
 Client HTTP (curl)
@@ -52,36 +52,36 @@ EC2 (start / stop)
 
 ---
 
-## 🧩 Séquence 1 — GitHub Codespaces
+## Séquence 1 — GitHub Codespaces
 
-### 🎯 Objectif
+### Objectif
 Créer un environnement de travail isolé et prêt à l’emploi.
 
-### ⏱️ Difficulté
+### Difficulté
 Très facile (~5 minutes)
 
-### 🛠️ Étapes
+### Étapes
 
 1. Fork du dépôt GitHub : https://github.com/dceleste35/API_Driven
 2. Ouvrir votre dépôt forké
 3. Cliquer sur **Code** puis **Open with Codespaces**
 4. Cliquer sur **Create new Codespace**
 
-👉 Le Codespace est maintenant connecté à votre repository.
+Le Codespace est maintenant connecté à votre repository.
 
 ---
 
-## 🧩 Séquence 2 — Création de l’environnement AWS simulé (LocalStack)
+## Séquence 2 — Création de l’environnement AWS simulé (LocalStack)
 
-### 🎯 Objectif
+### Objectif
 Créer un environnement AWS local simulé avec LocalStack.
 
-### ⏱️ Difficulté
+### Difficulté
 Simple (~5 minutes)
 
 ---
 
-## 🔧 Installation de LocalStack
+## Installation de LocalStack
 
 Dans le terminal du Codespace, exécuter les commandes suivantes :
 
@@ -99,19 +99,19 @@ localstack start -d
 localstack status services
 ```
 
-👉 Les services doivent apparaître comme **available**.  
+Les services doivent apparaître comme **available**.  
 La sortie `available` indique que les services AWS sont correctement exposés par LocalStack et prêts à être utilisés.
 
 ---
 
-## 🌐 Récupération de l’endpoint AWS LocalStack
+## Récupération de l’endpoint AWS LocalStack
 
 1. Aller dans l’onglet **PORTS** du Codespace
 2. Repérer le port **4566**
 3. Passer sa visibilité en **Public** (Clic droit -> Visibilité du Port)
 4. Copier l’URL associée (elle peut être en `https`)
 
-👉 Cette URL correspond à votre **AWS_ENDPOINT** LocalStack.  
+Cette URL correspond à votre **AWS_ENDPOINT** LocalStack.  
 ⚠️ Copiez l’URL telle quelle, sans slash final.
 
 Exemples :
@@ -119,7 +119,7 @@ Exemples :
 
 ---
 
-## 🔐 Variables AWS minimales
+## Variables AWS minimales
 
 ```bash
 export AWS_ENDPOINT="https://<URL_DU_PORT_4566>"
@@ -136,7 +136,7 @@ curl -s "$AWS_ENDPOINT/_localstack/health" | head
 
 ---
 
-## 🧠 Capitalisation (Séquence 2)
+## Capitalisation (Séquence 2)
 
 À l’issue de cette séquence, vous avez appris à :
 - installer LocalStack dans GitHub Codespaces
@@ -145,18 +145,18 @@ curl -s "$AWS_ENDPOINT/_localstack/health" | head
 
 ---
 
-## 🧪 Exercice — Piloter une instance EC2 via une API HTTP
+## Exercice — Piloter une instance EC2 via une API HTTP
 
-### 🎯 Objectif
+### Objectif
 Mettre en place et utiliser une **API HTTP** déclenchant une **Lambda**, afin de **démarrer ou arrêter une instance EC2** dans un environnement AWS simulé avec **LocalStack**, sans interface graphique.
 
 À la fin de l’exercice, vous devez démontrer qu’un **appel HTTP** modifie bien l’état d’une instance EC2 (`stopped` ↔ `running`).
 
 ---
 
-## ✅ Pré‑requis de l’exercice
+## Pré‑requis de l’exercice
 
-### 1️⃣ Vérifier que LocalStack est lancé
+### Vérifier que LocalStack est lancé
 ```bash
 localstack status services
 ```
@@ -165,7 +165,7 @@ localstack status services
 
 ---
 
-### 2️⃣ Récupérer l’endpoint AWS LocalStack
+### Récupérer l’endpoint AWS LocalStack
 
 Dans GitHub Codespaces :
 1. Ouvrir l’onglet **PORTS**
@@ -175,7 +175,7 @@ Dans GitHub Codespaces :
 
 ---
 
-## 🔧 Installation de l’AWS CLI
+## Installation de l’AWS CLI
 
 GitHub Codespaces ne fournit pas AWS CLI par défaut.  
 Avant de continuer, vous devez installer l’outil `aws`.
@@ -202,7 +202,7 @@ aws-cli/2.x.x Python/3.x ...
 
 ---
 
-## 🧩 (Optionnel) Installer `awslocal`
+## (Optionnel) Installer `awslocal`
 
 `awslocal` est un wrapper simplifiant l’utilisation de LocalStack.
 
@@ -217,7 +217,7 @@ awslocal --version
 
 ---
 
-## 🧩 Étape A — Préparer l’outil AWS CLI
+## Étape A — Préparer l’outil AWS CLI
 
 Tester si `awslocal` est disponible :
 ```bash
@@ -233,9 +233,9 @@ alias awsls='aws --endpoint-url="$AWS_ENDPOINT"'
 
 ---
 
-## 🧩 Étape B — Vérifier ou créer une instance EC2
+## Étape B — Vérifier ou créer une instance EC2
 
-### 1️⃣ Vérifier l’existence d’une instance
+### Vérifier l’existence d’une instance
 ```bash
 awsls ec2 describe-instances \
   --query "Reservations[].Instances[].InstanceId" \
@@ -247,7 +247,7 @@ awsls ec2 describe-instances \
 
 ---
 
-### 2️⃣ Créer une instance EC2 de test
+### Créer une instance EC2 de test
 ```bash
 awsls ec2 run-instances \
   --image-id ami-12345678 \
@@ -274,7 +274,7 @@ awsls ec2 describe-instances \
 
 ---
 
-## 🧩 Étape C — Déployer l’API (API Gateway + Lambda)
+## Étape C — Déployer l’API (API Gateway + Lambda)
 
 Le repository fournit une commande de déploiement.  
 
@@ -287,7 +287,7 @@ Le script affiche `REST_API_ID` et `API_URL` en fin d’exécution.
 
 ---
 
-## 🧩 Étape D — Récupérer l’URL de l’API Gateway
+## Étape D — Récupérer l’URL de l’API Gateway
 
 Si vous venez d’exécuter `make deploy`, l’URL est déjà affichée à la fin du script :
 ```bash
@@ -321,9 +321,9 @@ curl -i "$API_URL"
 
 ---
 
-## 🧩 Étape E — Utiliser l’API pour piloter EC2
+## Étape E — Utiliser l’API pour piloter EC2
 
-### 🔌 Spécification de l’API
+### Spécification de l’API
 
 **Endpoint**
 ```
@@ -343,7 +343,7 @@ ou
 
 ---
 
-### ▶️ Arrêter l’instance EC2
+### Arrêter l’instance EC2
 
 ```bash
 curl -s -X POST "$API_URL/ec2" \
@@ -366,7 +366,7 @@ stopped
 
 ---
 
-### ▶️ Démarrer l’instance EC2
+### Démarrer l’instance EC2
 
 ```bash
 curl -s -X POST "$API_URL/ec2" \
@@ -389,7 +389,7 @@ running
 
 ---
 
-## ✅ Validation attendue
+## Validation attendue
 
 Vous devez être capable de fournir :
 - la commande HTTP utilisée pour arrêter l’instance
@@ -398,7 +398,7 @@ Vous devez être capable de fournir :
 
 ---
 
-## 🧾 Auto‑évaluation
+## Auto‑évaluation
 
 - [ ] LocalStack lancé
 - [ ] Endpoint AWS configuré
@@ -409,7 +409,7 @@ Vous devez être capable de fournir :
 
 ---
 
-## 🧯 Dépannage rapide
+## Dépannage rapide
 
 - `localstack status services` n’affiche pas `available` : relancer `localstack start -d` et vérifier Docker.
 - `aws` est introuvable : réinstaller AWS CLI v2.
@@ -419,7 +419,7 @@ Vous devez être capable de fournir :
 
 ---
 
-## 🧹 Nettoyage
+## Nettoyage
 
 ```bash
 localstack stop
@@ -427,6 +427,6 @@ localstack stop
 
 ---
 
-## 🎓 Conclusion
+## Conclusion
 
 Cet exercice démontre qu’une **architecture serverless API‑driven** permet de piloter dynamiquement des ressources d’infrastructure via de simples requêtes HTTP, sans dépendre d’une console graphique.
